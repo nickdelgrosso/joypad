@@ -15,4 +15,6 @@ maintainers = [
 ]
 description = "Control apps with standard dual-joystick controllers."
 readme = "README.md"
+license = "MIT"
+keywords = ["controller", "joystick", "gaming"]
 

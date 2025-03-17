@@ -48,6 +48,7 @@ controller_manager.listen()  # starts background thread for event polling
 controllers = controller_manager.get_controllers()
 print(f'Detected {len(controllers)} controller{"s" if len(controllers) != 1 else ""}.')
 for idx, controller in enumerate(controllers, start=1):
+    controller.nintendo_mode = True  # if you want the nintendo button layout.
     controller.register_callbacks(Controls(f'Player {idx}'))
 
 # 4. Keep your main application running

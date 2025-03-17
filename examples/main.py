@@ -10,6 +10,15 @@ class Controls(BaseControllerCallbacks):
     def on_a_button_push(self):
         print(f'{self.name} Pressed A.')
 
+    def on_b_button_push(self):
+        print(f'{self.name} Pressed B.')
+
+    def on_x_button_push(self):
+        print(f'{self.name} Pressed X.')
+
+    def on_y_button_push(self):
+        print(f'{self.name} Pressed Y.')
+
     def on_left_stick_move(self, x, y):
         print(f'{self.name} Moved Left Stick:', x, y)
 
@@ -25,6 +34,7 @@ controller_manager.listen()  # start controller event detection loop on a sepera
 controllers = controller_manager.get_controllers()
 print(f'Detected {len(controllers)} controller{'s' if len(controllers) > 1 else ''}.')
 for idx, controller in enumerate(controllers, start=1):
+    controller.nintendo_mode = True
     controller.register_callbacks(Controls(f'Player {idx}'))
 
 

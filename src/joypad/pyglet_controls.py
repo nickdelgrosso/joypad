@@ -5,7 +5,7 @@ import pyglet
 from .controller import BaseControllerCallbacks, IController
 
 
-def register_callbacks(controller: pyglet.input.Control, callbacks: BaseControllerCallbacks):
+def register_callbacks(controller: pyglet.input.Control, callbacks: BaseControllerCallbacks, nintendo_mode: bool = False):
 
         @controller.event
         def on_dpad_motion(controller, vector):
@@ -24,10 +24,10 @@ def register_callbacks(controller: pyglet.input.Control, callbacks: BaseControll
         @controller.event
         def on_button_press(controller, button_name):
             funs = {
-                 'x': callbacks.on_x_button_push,
-                 'y': callbacks.on_y_button_push,
-                 'a': callbacks.on_a_button_push,
-                 'b': callbacks.on_b_button_push,
+                 'x' if not nintendo_mode else 'y': callbacks.on_x_button_push,
+                 'y' if not nintendo_mode else 'x': callbacks.on_y_button_push,
+                 'a' if not nintendo_mode else 'b': callbacks.on_a_button_push,
+                 'b' if not nintendo_mode else 'a': callbacks.on_b_button_push,
                  'leftshoulder': callbacks.on_left_shoulder_button_push,
                  'rightshoulder': callbacks.on_right_shoulder_button_push,
                  'leftstick': callbacks.on_left_stick_button_push,
@@ -42,10 +42,10 @@ def register_callbacks(controller: pyglet.input.Control, callbacks: BaseControll
         @controller.event
         def on_button_release(controller, button_name):
             funs = {
-                 'x': callbacks.on_x_button_release,
-                 'y': callbacks.on_y_button_release,
-                 'a': callbacks.on_a_button_release,
-                 'b': callbacks.on_b_button_release,
+                 'x' if not nintendo_mode else 'y': callbacks.on_x_button_release,
+                 'y' if not nintendo_mode else 'x': callbacks.on_y_button_release,
+                 'a' if not nintendo_mode else 'b': callbacks.on_a_button_release,
+                 'b' if not nintendo_mode else 'a': callbacks.on_b_button_release,
                  'leftshoulder': callbacks.on_left_shoulder_button_release,
                  'rightshoulder': callbacks.on_right_shoulder_button_release,
                  'leftstick': callbacks.on_left_stick_button_release,
@@ -81,8 +81,10 @@ def register_callbacks(controller: pyglet.input.Control, callbacks: BaseControll
 
 
 class PygletController(IController):
+    nintendo_mode: bool
 
     def __init__(self, controller: pyglet.input.Controller):
+        self.nintendo_mode = False
         self._controller = controller
         self._controller.open()
 
@@ -91,7 +93,7 @@ class PygletController(IController):
         return self._controller.name
     
     def register_callbacks(self, callbacks: BaseControllerCallbacks) -> None:
-        register_callbacks(controller=self._controller, callbacks=callbacks)
+        register_callbacks(controller=self._controller, callbacks=callbacks, nintendo_mode=self.nintendo_mode)
 
 
         

@@ -1,2 +1,2 @@
-from .controller import BaseControllerCallbacks
-from .pyglet_controls import PygletControllerManager, PygletController
+from .controller import BaseControls
+from .pyglet_controls import Manager, PygletController

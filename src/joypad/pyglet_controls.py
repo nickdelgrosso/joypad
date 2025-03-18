@@ -2,10 +2,10 @@ from threading import Thread
 import time
 import pyglet
 
-from .controller import BaseControllerCallbacks, IController
+from .controller import BaseControls, IController
 
 
-def register_callbacks(controller: pyglet.input.Control, callbacks: BaseControllerCallbacks, nintendo_mode: bool = False):
+def register_callbacks(controller: pyglet.input.Control, callbacks: BaseControls, nintendo_mode: bool = False):
 
         @controller.event
         def on_dpad_motion(controller, vector):
@@ -92,19 +92,19 @@ class PygletController(IController):
     def name(self) -> str:
         return self._controller.name
     
-    def register_callbacks(self, callbacks: BaseControllerCallbacks) -> None:
+    def register_callbacks(self, callbacks: BaseControls) -> None:
         register_callbacks(controller=self._controller, callbacks=callbacks, nintendo_mode=self.nintendo_mode)
 
 
         
     
-class PygletControllerManager:
+class Manager:
 
     def __init__(self):
         self._thread: Thread = None
 
-    @staticmethod
-    def get_controllers() -> list[PygletController]:
+    @property
+    def controllers(self) -> list[PygletController]:
         controllers = []
         for pyglet_controller in pyglet.input.ControllerManager().get_controllers():
             controllers.append(PygletController(controller=pyglet_controller))
@@ -114,10 +114,12 @@ class PygletControllerManager:
         self._thread = Thread(target=self._collect_controller_events, daemon=True)
         self._thread.start()
 
-    @staticmethod
-    def _collect_controller_events():
+    def dispatch_events(self) -> None:
+        pyglet.app.platform_event_loop.dispatch_posted_events()  
+
+    def _collect_controller_events(self):
         while True:
             pyglet.clock.tick()           # Allows scheduled events to run
-            pyglet.app.platform_event_loop.dispatch_posted_events()  
+            self.dispatch_events()
             time.sleep(0.002)  # sleep to avoid busy-wait
 

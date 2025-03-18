@@ -1,8 +1,8 @@
 import time
-from joypad import BaseControllerCallbacks, PygletControllerManager
+from joypad import BaseControls, Manager
 
 # Create Custom Controls by inheriting from BaseControllerCallbacks
-class Controls(BaseControllerCallbacks):
+class Controls(BaseControls):
 
     def __init__(self, name = ""):
         self.name = name
@@ -28,10 +28,10 @@ class Controls(BaseControllerCallbacks):
 
 
 # Register Controllers and Custom Controls
-controller_manager = PygletControllerManager()
+controller_manager = Manager()
 controller_manager.listen()  # start controller event detection loop on a seperate thread.
 
-controllers = controller_manager.get_controllers()
+controllers = controller_manager.controllers
 print(f'Detected {len(controllers)} controller{'s' if len(controllers) > 1 else ''}.')
 for idx, controller in enumerate(controllers, start=1):
     controller.nintendo_mode = True

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class BaseControllerCallbacks:
+class BaseControls:
     """
     Controller event callbacks.  Inherit from this class to make your own behavior.
 
@@ -59,5 +59,5 @@ class IController:
 
 
     @abstractmethod    
-    def register_callbacks(self, callbacks: BaseControllerCallbacks) -> None:
+    def register_callbacks(self, callbacks: BaseControls) -> None:
         ...

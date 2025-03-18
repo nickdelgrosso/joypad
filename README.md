@@ -24,10 +24,10 @@ Here’s a quick example showing how to set up custom callbacks and start listen
 
 ```python
 import time
-from joypad import BaseControllerCallbacks, PygletControllerManager
+from joypad import BaseControls, Manager
 
-# 1. Define your custom callbacks by extending BaseControllerCallbacks
-class Controls(BaseControllerCallbacks):
+# 1. Define your custom callbacks by extending BaseControls
+class Controls(BaseControls):
     def __init__(self, name=""):
         self.name = name
 
@@ -41,11 +41,12 @@ class Controls(BaseControllerCallbacks):
         print(f'{self.name} Pulled Right Trigger to Level {value}')
 
 # 2. Create a Controller Manager and start the event detection loop
-controller_manager = PygletControllerManager()
-controller_manager.listen()  # starts background thread for event polling
+manager = Manager()
+manager.listen()  # starts background thread for event polling. 
+
 
 # 3. Get connected controllers and register your custom callbacks
-controllers = controller_manager.get_controllers()
+controllers = manager.controllers
 print(f'Detected {len(controllers)} controller{"s" if len(controllers) != 1 else ""}.')
 for idx, controller in enumerate(controllers, start=1):
     controller.nintendo_mode = True  # if you want the nintendo button layout.
@@ -53,6 +54,7 @@ for idx, controller in enumerate(controllers, start=1):
 
 # 4. Keep your main application running
 while True:
+    # manager.dispatch_events()  # if you don't have listen() running on another thread, otherwise not needed.
     time.sleep(1)
 ```
 

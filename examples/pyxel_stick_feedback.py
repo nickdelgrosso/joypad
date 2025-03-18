@@ -1,24 +1,32 @@
+from dataclasses import dataclass
 import pyxel
 import joypad
 
+@dataclass
+class App:
+    x: float = 0
+    y: float = 0
 
 class Controls(joypad.BaseControls):
+
+    def __init__(self, app: App):
+        self.app = app
     
-    def on_a_button_push(self):
-        pyxel.cls(0)
+    def on_left_stick_move(self, x, y):
+        
+        self.app.x = x
+        self.app.y = y
 
-    def on_b_button_push(self):
-        pyxel.rect(10, 10, 20, 20, 11)
 
-
+app = App()
 manager = joypad.Manager()
 for controller in manager.controllers:
     print(controller.name)
     controller.nintendo_mode = True
-    controller.register_callbacks(Controls())
+    controller.register_callbacks(Controls(app=app))
+# manager.listen()
 
-
-pyxel.init(160, 120)
+pyxel.init(160, 120, fps=60)
 
 def update():
     manager.dispatch_events()
@@ -26,9 +34,8 @@ def update():
         pyxel.quit()
 
 def draw():
-    ...
-    # pyxel.cls(0)
-    pyxel.rect(40, 50, 20, 20, 11)
+    pyxel.cls(0)
+    pyxel.rect(round(80 + 80*app.x) - 10, round(60 - 60*app.y) - 10, 20, 20, 11)
 
 
 pyxel.run(update, draw)

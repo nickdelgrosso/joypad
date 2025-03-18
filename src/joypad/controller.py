@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import Literal
 
 class BaseControls:
     """
@@ -48,7 +50,6 @@ class BaseControls:
     def on_left_trigger_move(self, value: float): ...
     def on_right_trigger_move(self, value: float): ...
 
-    
 
 class IController:
 
